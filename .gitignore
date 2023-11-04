@@ -1,12 +1,6 @@
-venv/
-venv_3/
-venv_cryptos/
+venv*
 
-keys/
-key.json
+key*
 gcloud_account_id.txt
  
-old_from_v1/
-
-venv.zip
 

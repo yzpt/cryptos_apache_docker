@@ -19,8 +19,8 @@ git remote add origin https://github.com/yzpt/cryptos_apache_docker.git
 git push -u origin master
 
 # venv
-python3 -m venv venv
-source ./venv/bin/activate
+python3 -m venv venv_a
+source ./venv_a/bin/activate
 
 # pip 
 pip install requests
@@ -31,7 +31,7 @@ pip install google-cloud-bigquery
 pip install pyspark
 pip install websocket
 pip install websocket-client
-pip install kafka
+pip install kafka-python
 
 # Airflow: see doc below to install from pypi, we need to adjust the constraint file accordingly to python version
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html

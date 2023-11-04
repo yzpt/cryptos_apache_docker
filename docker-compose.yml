@@ -2,7 +2,7 @@ version: '3'
 
 services:
   zookeeper:
-      image: confluentinc/cp-zookeeper:7.4.0
+      image: confluentinc/cp-zookeeper:latest
       hostname: zookeeper
       container_name: zookeeper
       ports:
@@ -19,7 +19,7 @@ services:
         - confluent
 
   broker:
-    image: confluentinc/cp-server:7.4.0
+    image: confluentinc/cp-server:latest
     hostname: broker
     container_name: broker
     depends_on:
@@ -56,7 +56,7 @@ services:
       retries: 5
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:7.4.0
+    image: confluentinc/cp-schema-registry:latest
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -76,7 +76,7 @@ services:
       timeout: 10s
       retries: 5
   control-center:
-    image: confluentinc/cp-enterprise-control-center:7.4.0
+    image: confluentinc/cp-enterprise-control-center:latest
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -102,9 +102,9 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-
+# ===================================================================================================
   webserver:
-    image: apache/airflow:2.6.0-python3.9
+    image: apache/airflow:2.7.2-python3.10
     command: webserver
     entrypoint: ['/opt/airflow/script/entrypoint.sh']
     depends_on:
@@ -133,7 +133,7 @@ services:
       - confluent
 
   scheduler:
-    image: apache/airflow:2.6.0-python3.9
+    image: apache/airflow:2.7.2-python3.10
     depends_on:
       webserver:
         condition: service_healthy
@@ -197,5 +197,6 @@ services:
       - CASSANDRA_PASSWORD=cassandra
     networks:
       - confluent
+
 networks:
   confluent:
