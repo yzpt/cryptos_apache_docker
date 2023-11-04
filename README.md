@@ -22,7 +22,7 @@
 git init
 git add .
 git commit -m "1st commit"
-git remote add origin https://github.com/yzpt/cryptos_gcp.git
+git remote add origin https://github.com/yzpt/cryptos_apache_docker.git
 git push -u origin master
 
 # venv
