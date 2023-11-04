@@ -6,13 +6,6 @@
 * on Ubuntu-based Docker containers : Kafka, PostgresSQL, Spark, Airflow
 * Looker
 
-### In this project, I am implementing:
-
-* Using Ubuntu/Bash locally.
-* Writing scripts with well-documented, understandable, and maintainable syntax.
-* Editing the README file in parallel with development.
-* Automating deployments.
-
 <hr>
 
 ## 1. Git, Virtual Environment, and Pip
