@@ -418,4 +418,3 @@ see tuto : [https://www.youtube.com/watch?v=GqAcTrqKcrY&t=4451s&ab_channel=CodeW
 
 from [Yusuf Ganiyu](https://github.com/airscholar)
 
-# cryptos_apache_docker
