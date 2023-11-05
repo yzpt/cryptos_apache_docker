@@ -32,6 +32,7 @@ pip install pyspark
 pip install websocket
 pip install websocket-client
 pip install kafka-python
+pip install cassandra-driver
 
 # Airflow: see doc below to install from pypi, we need to adjust the constraint file accordingly to python version
 # https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html
