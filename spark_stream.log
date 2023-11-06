@@ -1,0 +1,30 @@
+2023-11-06 21:49:05,727:INFO:Spark connection created successfully!
+2023-11-06 21:49:08,101:INFO:kafka dataframe created successfully
+2023-11-06 21:49:08,897:WARNING:Cluster.__init__ called with contact_points specified, but no load_balancing_policy. In the next major version, this will raise an error; please specify a load-balancing policy. (contact_points = ['localhost'], lbp = None)
+2023-11-06 21:49:08,901:WARNING:[control connection] Error connecting to 127.0.0.1:9042:
+Traceback (most recent call last):
+  File "cassandra/cluster.py", line 3541, in cassandra.cluster.ControlConnection._reconnect_internal
+  File "cassandra/cluster.py", line 3563, in cassandra.cluster.ControlConnection._try_connect
+  File "cassandra/cluster.py", line 1630, in cassandra.cluster.Cluster.connection_factory
+  File "cassandra/connection.py", line 850, in cassandra.connection.Connection.factory
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/cassandra/io/asyncorereactor.py", line 347, in __init__
+    self._connect_socket()
+  File "cassandra/connection.py", line 917, in cassandra.connection.Connection._connect_socket
+ConnectionRefusedError: [Errno 111] Tried connecting to [('127.0.0.1', 9042)]. Last error: Connection refused
+2023-11-06 21:49:08,902:ERROR:Control connection failed to connect, shutting down Cluster:
+Traceback (most recent call last):
+  File "cassandra/cluster.py", line 1700, in cassandra.cluster.Cluster.connect
+  File "cassandra/cluster.py", line 3507, in cassandra.cluster.ControlConnection.connect
+  File "cassandra/cluster.py", line 3552, in cassandra.cluster.ControlConnection._reconnect_internal
+cassandra.cluster.NoHostAvailable: ('Unable to connect to any servers', {'127.0.0.1:9042': ConnectionRefusedError(111, "Tried connecting to [('127.0.0.1', 9042)]. Last error: Connection refused")})
+2023-11-06 21:49:08,902:ERROR:Could not create cassandra connection due to ('Unable to connect to any servers', {'127.0.0.1:9042': ConnectionRefusedError(111, "Tried connecting to [('127.0.0.1', 9042)]. Last error: Connection refused")})
+2023-11-06 21:49:08,902:INFO:Closing down clientserver connection
+2023-11-06 22:22:50,899:INFO:Spark connection created successfully!
+2023-11-06 22:22:53,901:INFO:kafka dataframe created successfully
+2023-11-06 22:22:54,753:INFO:Streaming is being started...
+2023-11-06 22:22:55,399:INFO:Closing down clientserver connection
+2023-11-06 22:28:11,073:ERROR:Couldn't create the spark session due to exception [JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number.
+2023-11-06 22:31:21,908:ERROR:Couldn't create the spark session due to exception [JAVA_GATEWAY_EXITED] Java gateway process exited before sending its port number.
+2023-11-06 22:32:42,125:INFO:Spark connection created successfully!
+2023-11-06 22:32:44,627:INFO:kafka dataframe created successfully
+2023-11-06 22:32:45,293:INFO:Streaming is being started...
