@@ -7,7 +7,7 @@
 <hr>
 
 
-I am replicating the great project by [Dogukan Ulu](https://dogukanulu.dev/):
+I am replicating and customizing the great project from [Dogukan Ulu](https://dogukanulu.dev/) :
 
 * [Data Engineering End-to-End Project — Spark, Kafka, Airflow, Docker, Cassandra, Python](https://medium.com/@dogukannulu/data-engineering-end-to-end-project-1-7a7be2a3671)
 
