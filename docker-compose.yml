@@ -47,6 +47,8 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'false'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    volumes:
+    - ./volume_kafka_broker:/var/kafka/data
     networks:
       - confluent
     healthcheck:
@@ -206,13 +208,13 @@ services:
   postgresql:
     image: bitnami/postgresql:latest
     environment:
-      - POSTGRES_USER=spark
-      - POSTGRES_PASSWORD=spark
-      - POSTGRES_DB=spark
+      - POSTGRES_USER=pgsql_user
+      - POSTGRES_PASSWORD=pgsql_user
+      - POSTGRES_DB=spark_database
     ports:
       - "5432:5432"
-    volumes:
-      - ./data_postgresql:/var/lib/postgresql/data
+    # volumes:
+    #   - ./data_postgresql:/var/lib/postgresql/data
     networks:
       - confluent
 

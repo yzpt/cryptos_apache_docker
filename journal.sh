@@ -32,9 +32,7 @@ docker compose exec broker ../../usr/bin/kafka-console-producer --topic test_top
 docker compose exec broker  ../../usr/bin/kafka-console-consumer --topic test_topic --from-beginning --bootstrap-server localhost:9092
 
 
-
-
-
-
 # ===== pySpark ==============================================================================
 # --> see nb_pyspark.py
+
+

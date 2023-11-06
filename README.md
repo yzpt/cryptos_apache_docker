@@ -1,10 +1,9 @@
 #  --- Work in progress ---
 
-### ETL w/ :
+## Deploying and running a multi-container architecture (Airflow, Kafka, Spark, and PostgreSQL) locally, and then migrating it to GCP's Kubernetes Engine
 
-* on GCP : Pub/Sub, Function, Cloud SQL(PostgreSQL), Dataproc, Composer
-* on Ubuntu-based Docker containers : Kafka, PostgresSQL, Spark, Airflow
-* Looker
+![project diagram](./img/diagram_cryptos_png.png)
+
 
 <hr>
 
@@ -408,7 +407,10 @@ bin/kafka-console-consumer.sh --topic cryptos_topic --from-beginning --bootstrap
 
 Creating architecture using docker compose and bitnami's and confluent's images.
 
-see tuto : [https://www.youtube.com/watch?v=GqAcTrqKcrY&t=4451s&ab_channel=CodeWithYu](https://www.youtube.com/watch?v=GqAcTrqKcrY&t=4451s&ab_channel=CodeWithYu)
+Reproducing the great project from [Dogukan Ulu](https://dogukanulu.dev/) :
 
-from [Yusuf Ganiyu](https://github.com/airscholar)
+* [https://medium.com/@dogukannulu/data-engineering-end-to-end-project-1-7a7be2a3671](https://medium.com/@dogukannulu/data-engineering-end-to-end-project-1-7a7be2a3671)
+
+
+* Repo : [https://github.com/dogukannulu/kafka_spark_structured_streaming](https://github.com/dogukannulu/kafka_spark_structured_streaming)
 
