@@ -169,8 +169,11 @@ services:
     ports:
       - "9090:8080"
       - "7077:7077"
+    volumes:
+      - ./volume_spark_master:/opt/bitnami/jars
     networks:
       - confluent
+  
   spark-worker:
     image: bitnami/spark:latest
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
@@ -181,6 +184,8 @@ services:
       SPARK_WORKER_CORES: 2
       SPARK_WORKER_MEMORY: 1g
       SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - ./volume_spark_worker:/opt/bitnami/jars
     networks:
       - confluent
 
@@ -195,6 +200,19 @@ services:
       - HEAP_NEWSIZE=100M
       - CASSANDRA_USERNAME=cassandra
       - CASSANDRA_PASSWORD=cassandra
+    networks:
+      - confluent
+
+  postgresql:
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRES_USER=spark
+      - POSTGRES_PASSWORD=spark
+      - POSTGRES_DB=spark
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data_postgresql:/var/lib/postgresql/data
     networks:
       - confluent
 
