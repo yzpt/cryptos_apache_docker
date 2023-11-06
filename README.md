@@ -30,4 +30,4 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 
 Cassandra's driver doesn't support spark 3.5.0 yet, i'll try to replace it by postgresql or another database.
 
-I learned a lot about Docker, dependencies when reproducing this project, and I discovered that I enjoy the CI/CD aspect. That's why I choose to migrate to GCP Kubernetes Engine to deploy a container cluster in the cloud.
+I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine. I plan to deploy a container cluster in the cloud, a task not feasible with Cloud Run.
