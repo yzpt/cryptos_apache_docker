@@ -21,7 +21,7 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 <tr><td>KRaft</td><td>bitnami/kafka:3.6</td><td>Implementing the new KRaft mode : <a href="https://developer.confluent.io/learn/kraft/">Kafka Without ZooKeeper.</a><br><a href="https://hub.docker.com/r/bitnami/kafka">https://hub.docker.com/r/bitnami/kafka</a></td></tr>
 <tr><td>webserver<br>scheduler</td><td>apache/airflow:2.7.2-python3.10</td><td><a href="https://airflow.apache.org/docs/docker-stack/index.html">https://airflow.apache.org/docs/docker-stack/index.html</a></tr>
 <tr><td>postgres</td><td>postgres:16</td><td><a href="https://hub.docker.com/_/postgres">https://hub.docker.com/_/postgres</a></td>
-<tr><td>spark-master<br>spark-worker-1<br>spark-worker-2</td><td>bitnami/spark:3.5.0</td><td><a href="https://hub.docker.com/r/bitnami/spark">https://hub.docker.com/r/bitnami/spark</td></tr>
+<tr><td>spark-master<br>spark-worker</td><td>bitnami/spark:3.5.0</td><td><a href="https://hub.docker.com/r/bitnami/spark">https://hub.docker.com/r/bitnami/spark</td></tr>
 <tr><td>postgresql</td><td>bitnami/postgresql:16</td><td><a href="https://hub.docker.com/r/bitnami/spark">https://hub.docker.com/r/bitnami/postgresql</td></tr>
 </table>
 </div>
