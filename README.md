@@ -29,3 +29,4 @@ Cassandra's driver doesn't support spark 3.5.0 yet, i'll try to replace it by po
 
 I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine. I plan to deploy a container cluster in the cloud, a task not feasible with Cloud Run.
 
+
