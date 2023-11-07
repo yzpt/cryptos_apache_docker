@@ -36,3 +36,11 @@ docker compose exec broker  ../../usr/bin/kafka-console-consumer --topic test_to
 # --> see nb_pyspark.py
 
 
+
+# === bitnami kafka cluster ==============================================================================
+docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh --create --topic new_topic --partitions 1 --replication-factor 1 --bootstrap-server localhost:9092
+docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+docker compose exec kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topic test_topic --bootstrap-server localhost:9092
+docker compose exec kafka opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic test_topic --from-beginning --bootstrap-server localhost:9092
+
+# producer send ok voir znb.ipynb

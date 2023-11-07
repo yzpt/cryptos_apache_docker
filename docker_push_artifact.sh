@@ -90,3 +90,4 @@ TAG="latest"
 # docker cli modify the tag to match the registry
 docker tag $IMAGE:$TAG $ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE:$TAG
 docker push $ARTIFACT_REGISTRY_LOCATION-docker.pkg.dev/$PROJECT_ID/$ARTIFACT_REGISTRY_REPO_NAME/$IMAGE:$TAG
+

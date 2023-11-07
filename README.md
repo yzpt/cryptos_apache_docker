@@ -17,13 +17,10 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 
 <table>
 <tr><th>service</th><th>image</th></tr>
-<tr><td>zookeeper</td><td>confluentinc/cp-zookeeper:7.5.1</td></tr>
-<tr><td>broker</td><td>confluentinc/cp-server:7.5.1</td></tr>
-<tr><td>schema-registry</td><td>confluentinc/cp-schema-registry:7.5.1</td></tr>
-<tr><td>control-center</td><td>confluentinc/cp-enterprise-control-center:7.5.1</td></tr>
+<tr><td>zookeeper</td><td>bitnami/kafka:3.6</td></tr>
 <tr><td>webserver<br>scheduler</td><td>apache/airflow:2.7.2-python3.10</td></tr>
-<tr><td>postgres</td><td>postgres:14.0</td></tr>
-<tr><td>spark-master<br>spark-worker</td><td>bitnami/spark3.5.0</td></tr>
+<tr><td>postgres</td><td>postgres:16</td></tr>
+<tr><td>spark-master<br>spark-worker-1<bt>spark-worker-2</td><td>bitnami/spark:3.5.0</td></tr>
 <tr><td>postgresql</td><td>bitnami/postgresql:16</td></tr>
 </table>
 
@@ -31,3 +28,4 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 Cassandra's driver doesn't support spark 3.5.0 yet, i'll try to replace it by postgresql or another database.
 
 I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine. I plan to deploy a container cluster in the cloud, a task not feasible with Cloud Run.
+
