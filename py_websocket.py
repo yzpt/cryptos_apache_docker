@@ -3,6 +3,7 @@ import websocket
 import datetime
 import json
 from confluent_kafka import Producer
+import time
 
 with open('keys/finnhub_api_key.txt') as f:
     api_key = f.read()
@@ -16,9 +17,11 @@ except Exception as e:
 
 def on_message(ws, message):
     # Send message to Kafka
-    p.produce('new_topic', value=message)
+    p.produce('trades_topic', value=message)
     p.flush()
-    print("Message sent to Kafka")
+    # print('==================================')
+    # print(message)
+    # print('==================================')
 
 
 def on_error(ws, error):
@@ -41,6 +44,5 @@ if __name__ == "__main__":
                               on_error = on_error,
                               on_close = on_close)
     ws.on_open = on_open
-    ws.run_forever()
 
-    # on_message(None, "allo from py")
+    ws.run_forever()

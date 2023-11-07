@@ -28,3 +28,140 @@ cassandra.cluster.NoHostAvailable: ('Unable to connect to any servers', {'127.0.
 2023-11-06 22:32:42,125:INFO:Spark connection created successfully!
 2023-11-06 22:32:44,627:INFO:kafka dataframe created successfully
 2023-11-06 22:32:45,293:INFO:Streaming is being started...
+2023-11-07 11:39:51,898:INFO:Spark connection created successfully!
+2023-11-07 11:39:55,079:INFO:kafka dataframe created successfully
+2023-11-07 11:39:56,010:INFO:Streaming is being started...
+2023-11-07 11:40:13,614:INFO:Error while receiving.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+RuntimeError: reentrant call inside <_io.BufferedReader name=4>
+2023-11-07 11:40:13,618:INFO:Closing down clientserver connection
+2023-11-07 11:40:13,618:ERROR:Exception while sending command.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+RuntimeError: reentrant call inside <_io.BufferedReader name=4>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 539, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2023-11-07 11:40:13,619:INFO:Error while receiving.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 381, in signal_handler
+    self.cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 2446, in cancelAllJobs
+    self._jsc.sc().cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+    return f(*a, **kw)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+py4j.protocol.Py4JError: An error occurred while calling o18.sc
+2023-11-07 11:40:13,629:INFO:Closing down clientserver connection
+2023-11-07 11:40:13,630:ERROR:Exception while sending command.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 381, in signal_handler
+    self.cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 2446, in cancelAllJobs
+    self._jsc.sc().cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+    return f(*a, **kw)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+py4j.protocol.Py4JError: An error occurred while calling o18.sc
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 539, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2023-11-07 11:40:13,631:INFO:Closing down clientserver connection
+2023-11-07 11:40:13,636:INFO:Closing down clientserver connection
+2023-11-07 11:42:16,302:INFO:Spark connection created successfully!
+2023-11-07 11:42:47,647:INFO:Error while receiving.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+RuntimeError: reentrant call inside <_io.BufferedReader name=4>
+2023-11-07 11:42:47,648:INFO:Closing down clientserver connection
+2023-11-07 11:42:47,648:ERROR:Exception while sending command.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+RuntimeError: reentrant call inside <_io.BufferedReader name=4>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 539, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2023-11-07 11:42:47,649:INFO:Error while receiving.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 381, in signal_handler
+    self.cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 2446, in cancelAllJobs
+    self._jsc.sc().cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+    return f(*a, **kw)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+py4j.protocol.Py4JError: An error occurred while calling o18.sc
+2023-11-07 11:42:47,651:INFO:Closing down clientserver connection
+2023-11-07 11:42:47,652:ERROR:Exception while sending command.
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 511, in send_command
+    answer = smart_decode(self.stream.readline()[:-1])
+  File "/usr/lib/python3.10/socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 381, in signal_handler
+    self.cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/context.py", line 2446, in cancelAllJobs
+    self._jsc.sc().cancelAllJobs()
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1322, in __call__
+    return_value = get_return_value(
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/pyspark/errors/exceptions/captured.py", line 179, in deco
+    return f(*a, **kw)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/protocol.py", line 334, in get_return_value
+    raise Py4JError(
+py4j.protocol.Py4JError: An error occurred while calling o18.sc
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/java_gateway.py", line 1038, in send_command
+    response = connection.send_command(command)
+  File "/home/yzpt/projects/cryptos_apache_docker/venv_4/lib/python3.10/site-packages/py4j/clientserver.py", line 539, in send_command
+    raise Py4JNetworkError(
+py4j.protocol.Py4JNetworkError: Error while sending or receiving
+2023-11-07 11:42:47,652:INFO:Closing down clientserver connection
+2023-11-07 11:42:47,653:WARNING:kafka dataframe could not be created because: An error occurred while calling o38.awaitTermination
+2023-11-07 11:42:47,654:INFO:Closing down clientserver connection

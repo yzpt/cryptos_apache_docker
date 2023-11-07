@@ -31,7 +31,7 @@ def connect_to_kafka(spark_conn):
         spark_df = spark_conn.readStream \
             .format('kafka') \
             .option('kafka.bootstrap.servers', 'localhost:9092') \
-            .option('subscribe', 'users_created') \
+            .option('subscribe', 'new_topic') \
             .option('startingOffsets', 'earliest') \
             .load()
         logging.info("kafka dataframe created successfully")
@@ -41,26 +41,26 @@ def connect_to_kafka(spark_conn):
     return spark_df
 
 
-def create_selection_df_from_kafka(spark_df):
-    schema = StructType([
-        StructField("id", StringType(), False),
-        StructField("first_name", StringType(), False),
-        StructField("last_name", StringType(), False),
-        StructField("gender", StringType(), False),
-        StructField("address", StringType(), False),
-        StructField("post_code", StringType(), False),
-        StructField("email", StringType(), False),
-        StructField("username", StringType(), False),
-        StructField("registered_date", StringType(), False),
-        StructField("phone", StringType(), False),
-        StructField("picture", StringType(), False)
-    ])
+# def create_selection_df_from_kafka(spark_df):
+#     schema = StructType([
+#         StructField("id", StringType(), False),
+#         StructField("first_name", StringType(), False),
+#         StructField("last_name", StringType(), False),
+#         StructField("gender", StringType(), False),
+#         StructField("address", StringType(), False),
+#         StructField("post_code", StringType(), False),
+#         StructField("email", StringType(), False),
+#         StructField("username", StringType(), False),
+#         StructField("registered_date", StringType(), False),
+#         StructField("phone", StringType(), False),
+#         StructField("picture", StringType(), False)
+#     ])
 
-    sel = spark_df.selectExpr("CAST(value AS STRING)") \
-        .select(from_json(col('value'), schema).alias('data')).select("data.*")
-    print(sel)
+#     sel = spark_df.selectExpr("CAST(value AS STRING)") \
+#         .select(from_json(col('value'), schema).alias('data')).select("data.*")
+#     print(sel)
 
-    return sel
+#     return sel
 
 
 if __name__ == "__main__":
