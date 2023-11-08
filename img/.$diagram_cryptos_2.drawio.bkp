@@ -1,4 +1,4 @@
-<mxfile modified="2023-11-07T09:05:42.553Z" host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="acxcItlWxRHLFn7guSat" version="22.0.3" type="device">
+<mxfile modified="2023-11-07T09:19:09.901Z" host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="hFjMjECPjLwByuW5fHtv" version="22.0.3" type="device">
   <diagram id="d1ab7348-05c3-a1e3-ca4d-12c340fd6b49" name="Page-1">
     <mxGraphModel dx="1728" dy="1003" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="none" math="0" shadow="0">
       <root>
@@ -103,9 +103,6 @@
         </mxCell>
         <mxCell id="e0zx1OXjUzG2xtG4G9Sb-426" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Apache_Spark_logo.svg/1200px-Apache_Spark_logo.svg.png;" parent="e0zx1OXjUzG2xtG4G9Sb-424" vertex="1">
           <mxGeometry x="20" y="6.069999999999936" width="150" height="77.88" as="geometry" />
-        </mxCell>
-        <mxCell id="e0zx1OXjUzG2xtG4G9Sb-427" value="&lt;font style=&quot;font-size: 17px;&quot; color=&quot;#4a4a4a&quot;&gt;worker-2&lt;/font&gt;" style="strokeColor=#dddddd;fillColor=#ffffff;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;fontSize=10;fontColor=#9E9E9E;align=center;html=1;container=0;" parent="e0zx1OXjUzG2xtG4G9Sb-516" vertex="1">
-          <mxGeometry x="247.5" y="179.99" width="190" height="29.99" as="geometry" />
         </mxCell>
         <mxCell id="e0zx1OXjUzG2xtG4G9Sb-428" value="&lt;font style=&quot;font-size: 17px;&quot; color=&quot;#4a4a4a&quot;&gt;postgresql&lt;/font&gt;" style="strokeColor=#dddddd;fillColor=#ffffff;shadow=1;strokeWidth=1;rounded=1;absoluteArcSize=1;arcSize=2;fontSize=10;fontColor=#9E9E9E;align=center;html=1;container=0;" parent="e0zx1OXjUzG2xtG4G9Sb-516" vertex="1">
           <mxGeometry x="487.5" y="100.00999999999999" width="190" height="29.99" as="geometry" />
