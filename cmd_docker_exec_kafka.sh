@@ -1,7 +1,9 @@
 # === with bitnami:kafka image ===============================================================================================
 
-TOPIC="my_new_topic"
-SERVER="localhost:9092"
+TOPIC="trades_topic"
+SERVER="kafka:9092"
+
+docker compose exec kafka  opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic $TOPIC --from-beginning --bootstrap-server $SERVER
 
 # create a topic
 docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh \
@@ -12,7 +14,9 @@ docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh \
     --bootstrap-server $SERVER
 
 # list
-docker compose exec kafka  opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server $SERVER
+docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server $SERVER
+
+python3 stream_to_kafka.py
 
 # send a messgae to the topic
 echo "Hello" | docker compose exec -T kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topic $TOPIC --bootstrap-server $SERVER

@@ -10,7 +10,7 @@ api_key = 'cl0205hr01qhjei2vk5gcl0205hr01qhjei2vk60'
 
 # Create a Kafka producer
 try:
-    p = KafkaProducer(bootstrap_servers='localhost:9092')
+    p = KafkaProducer(bootstrap_servers='kafka:9092')
     print("Kafka producer created")
 except Exception as e:
     print(f"Failed to create Kafka producer because {e}")
@@ -20,9 +20,10 @@ async def on_message(message):
     message_bytes = message.encode('utf-8')
 
     # Send message to Kafka
-    p.send('trades_topic', value=message_bytes)
+    topic = 'users_topic'
+    p.send(topic, value=message_bytes)
     p.flush()
-    print("=============================")
+    print("=== " + topic + " ==========")
     print(message)
 
 async def on_error(error):
@@ -50,8 +51,17 @@ async def handler():
         await on_close()
 
 def start_streaming():
-    asyncio.get_event_loop().run_until_complete(handler())
+    # asyncio.get_event_loop().run_until_complete(handler())
+    
+    # import requests
+    # import json
+    # response = requests.get('https://randomuser.me/api/')
+    # message = json.dumps(response.json())
+    # print(message)
+    # p.send('users_topic', value=message.encode('utf-8'))
+    p.send('trades_topic', value=b'houhou')
+    # p.flush()
 
-if __name__ == "__main__":
-    start_streaming()
+# if __name__ == "__main__":
+start_streaming()
     
