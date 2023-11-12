@@ -1,6 +1,4 @@
-#  --- Work in progress ---
-
-## Deploying a multi-container architecture (Airflow, Kafka, Spark, and PostgreSQL) locally, and then migrating it to GCP's Kubernetes Engine
+## Deploying a Docker multi-container architecture (Airflow, Kafka, Spark, and Cassandra)
 
 ![project diagram](./img/diagram_cryptos_png.png)
 
@@ -28,8 +26,10 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 
 
 
-Cassandra's driver doesn't support spark 3.5.0 yet, i'll try to replace it by postgresql or another database.
+Cassandra's driver doesn't support spark 3.5.0 yet, i'll replace it by postgresql or and/or mongoDB.
 
-I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine. I plan to deploy a container cluster in the cloud, a task not feasible with Cloud Run.
+I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine. 
 
+To do:
+* [ ] Handle Kubernetes Engine
 
