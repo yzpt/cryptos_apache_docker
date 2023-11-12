@@ -44,3 +44,8 @@ docker compose exec kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topi
 docker compose exec kafka opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic test_topic --from-beginning --bootstrap-server localhost:9092
 
 # producer send ok voir znb.ipynb
+
+
+
+
+# =========== rewriting docker clean =============
