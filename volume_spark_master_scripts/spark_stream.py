@@ -13,7 +13,6 @@ from pyspark.sql.types import (
     ArrayType
 )
 
-
 def create_spark_connection():
     s_conn = None
 
@@ -36,45 +35,15 @@ def connect_to_kafka(spark_conn):
     try:
         spark_df = spark_conn.readStream \
             .format('kafka') \
-            .option('kafka.bootstrap.servers', 'localhost:9092') \
+            .option('kafka.bootstrap.servers', 'kafka:9092') \
             .option('subscribe', 'my_new_topic') \
-            .option('startingOffsets', 'earliest') \
+            .option('starting   Offsets', 'earliest') \
             .load()
         print("kafka dataframe created successfully")
     except Exception as e:
         print(f"kafka dataframe could not be created because: {e}")
 
     return spark_df
-
-# === message structure example : =====
-# {
-#     "data": [
-#         {
-#             "c": null,
-#             "p": 34851.9,
-#             "s": "BINANCE:BTCUSDT",
-#             "t": 1699351036478,
-#             "v": 0.00014
-#         },
-#         {
-#             "c": null,
-#             "p": 34851.89,
-#             "s": "BINANCE:BTCUSDT",
-#             "t": 1699351036955,
-#             "v": 0.01
-#         },
-#         {
-#             "c": null,
-#             "p": 34851.89,
-#             "s": "BINANCE:BTCUSDT",
-#             "t": 1699351037011,
-#             "v": 0.00029
-#         }
-#     ],
-#     "type": "trade"
-# }
-# === end of message structure example  =====
-
 
 def create_selection_df_from_kafka(spark_df):
     inner_schema = StructType([
@@ -99,36 +68,11 @@ def create_selection_df_from_kafka(spark_df):
 
 
 
-def connect_to_kafka_and_print_raw_data(spark_conn):
-    spark_df = None
-    try:
-        spark_df = spark_conn.readStream \
-            .format('kafka') \
-            .option('kafka.bootstrap.servers', 'localhost:9092') \
-            .option('subscribe', 'trades_topic') \
-            .option('startingOffsets', 'earliest') \
-            .load()
-
-        raw_query = spark_df \
-            .writeStream \
-            .format("console") \
-            .start()
-
-        raw_query.awaitTermination()
-
-        print("kafka dataframe created successfully")
-    except Exception as e:
-        print(f"kafka dataframe could not be created because: {e}")
-
-    return spark_df
-
 
 if __name__ == "__main__":
     # create spark connection
     spark_conn = create_spark_connection()
     
-    # connect_to_kafka_and_print_raw_data(spark_conn)
-
     if spark_conn is not None:
         # connect to kafka with spark connection
         spark_df = connect_to_kafka(spark_conn)
