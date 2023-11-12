@@ -3,13 +3,15 @@ import json
 import websockets
 from kafka import KafkaProducer
 
-with open('keys/finnhub_api_key.txt') as f:
-    api_key = f.read()
-    f.close()
+# with open('keys/finnhub_api_key.txt') as f:
+    # api_key = f.read()
+    # f.close()
+api_key = 'cl0205hr01qhjei2vk5gcl0205hr01qhjei2vk60'
 
 # Create a Kafka producer
 try:
     p = KafkaProducer(bootstrap_servers='localhost:9092')
+    print("Kafka producer created")
 except Exception as e:
     print(f"Failed to create Kafka producer because {e}")
 
@@ -18,9 +20,9 @@ async def on_message(message):
     message_bytes = message.encode('utf-8')
 
     # Send message to Kafka
-    p.send('my_new_topic', value=message_bytes)
+    p.send('trades_topic', value=message_bytes)
     p.flush()
-    print('=== sent: =================================')
+    print("=============================")
     print(message)
 
 async def on_error(error):
@@ -47,7 +49,9 @@ async def handler():
         await consumer_handler(websocket)
         await on_close()
 
-if __name__ == "__main__":
+def start_streaming():
     asyncio.get_event_loop().run_until_complete(handler())
 
+if __name__ == "__main__":
+    start_streaming()
     

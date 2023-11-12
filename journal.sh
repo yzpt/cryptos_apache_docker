@@ -38,3 +38,4 @@ docker compose exec kafka  opt/bitnami/kafka/bin/kafka-topics.sh --delete --topi
 python3 spark_stream.py
 
 docker exec compose-spark-master-1 spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 /opt/bitnami/pyspark_scripts/spark_stream.py
+

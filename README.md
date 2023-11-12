@@ -29,10 +29,23 @@ Cassandra's driver doesn't support spark 3.5.0 yet, i'll replace it by postgresq
 
 I gained extensive knowledge about Docker, dependency management while replicating this project, and i liked the CI/CD process. This newfound interest led me to opt for migrating to GCP Kubernetes Engine (see my on going project [Spark on Kubernetes repo](https://github.com/yzpt/spark_on_kubernetes/))
 
+## 1. Airflow
 
-## 1. Kafka
+### 1.1. Setup
 
-### 1.1. yaml file
+```bash
+pip install "apache-airflow[celery]==2.7.2" --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.10.txt"
+```
+
+
+### 1.1. DAG
+
+## -- work in progress --
+
+
+## 2. Kafka
+
+### 2.1. yaml file
 
 ```yaml
 services:
@@ -53,71 +66,17 @@ services:
       - '9094:9094'
 ```
 
-### 1.2. Start the Kafka broker with docker-compose
+### 2.2. Start the Kafka broker with docker-compose
 
 ```bash
 docker-compose up -d kafka
 ```
 
-## 2. Cryptos trades websocket messages python script
-
-### 2.1. Python script: websocket.py
-
-```python
-import asyncio
-import json
-import websockets
-from kafka import KafkaProducer
-
-with open('keys/finnhub_api_key.txt') as f:
-    api_key = f.read()
-    f.close()
-
-# Create a Kafka producer
-try:
-    p = KafkaProducer(bootstrap_servers='localhost:9092')
-except Exception as e:
-    print(f"Failed to create Kafka producer because {e}")
-
-async def on_message(message):
-    # Convert message to bytes
-    message_bytes = message.encode('utf-8')
-
-    # Send message to Kafka
-    p.send('my_new_topic', value=message_bytes)
-    p.flush()
-    print('=== sent: =================================')
-    print(message)
-
-async def on_error(error):
-    print(error)
-
-async def on_close():
-    print("### closed ###")
-
-async def on_open(ws):
-    await ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
-
-async def consumer_handler(websocket):
-    async for message in websocket:
-        await on_message(message)
-
-async def handler():
-    uri = "wss://ws.finnhub.io?token=" + api_key
-    async with websockets.connect(uri) as websocket:
-        await on_open(websocket)
-        await consumer_handler(websocket)
-        await on_close()
-
-if __name__ == "__main__":
-    asyncio.get_event_loop().run_until_complete(handler())
-```
-
-### 2.2. Checking the Kafka topic messages with the kafka-console-consumer
+### 2.3. Checking the Kafka topic messages with the kafka-console-consumer
 
 ```bash 
-TOPIC="my_new_topic"
-SERVER="localhost:9092"
+TOPIC="trades_topic"
+SERVER="kafka:9092"
 
 # list the topics
 docker compose exec kafka  opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server $SERVER
