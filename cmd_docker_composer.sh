@@ -15,7 +15,7 @@ docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh \
 docker compose exec kafka  opt/bitnami/kafka/bin/kafka-topics.sh --list --bootstrap-server $SERVER
 
 # send a messgae to the topic
-echo "bjour" | docker compose exec -T kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topic $TOPIC --bootstrap-server $SERVER
+echo "Hello" | docker compose exec -T kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topic $TOPIC --bootstrap-server $SERVER
 
 # open prompt to send messages to the topic
 docker compose exec kafka  opt/bitnami/kafka/bin/kafka-console-producer.sh --topic $TOPIC --bootstrap-server $SERVER
