@@ -5,6 +5,7 @@ SERVER="kafka:9092"
 
 docker compose exec kafka  opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic $TOPIC --from-beginning --bootstrap-server $SERVER
 
+kafka-console-consumer.sh --topic trades_topic --from-beginning --bootstrap-server kafka:9092
 # create a topic
 docker compose exec kafka opt/bitnami/kafka/bin/kafka-topics.sh \
     --create \

@@ -6,7 +6,6 @@ from kafka import KafkaProducer
 # with open('keys/finnhub_api_key.txt') as f:
     # api_key = f.read()
     # f.close()
-api_key = 'cl0205hr01qhjei2vk5gcl0205hr01qhjei2vk60'
 
 # Create a Kafka producer
 try:
@@ -62,6 +61,6 @@ def start_streaming():
     p.send('trades_topic', value=b'houhou')
     # p.flush()
 
-# if __name__ == "__main__":
-start_streaming()
+if __name__ == "__main__":
+    start_streaming()
     
