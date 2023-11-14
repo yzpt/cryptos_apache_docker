@@ -55,7 +55,7 @@ docker cp ./spark-sql-kafka-0-10_2.12-3.5.0.jar kraft-spark-master-1:/opt/bitnam
 
 
 docker exec -it kraft-spark-master-1 /bin/bash
-# ============================================
+# ===> inside container
 # spark-submit --master local[2] --jars /opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar ../pyspark_scripts/spark_streaming.py
 
 # create_initial_dataframe:WARNING:Initial dataframe couldn't be created due to exception: An error occurred while calling o34.load.
