@@ -47,11 +47,11 @@ def create_kafka_producer():
 
 def start_streaming():
     """
-    Writes the API data every 5 seconds to Kafka topic random_names
+    Writes the API data every seconds to Kafka topic random_names
     """
     producer = create_kafka_producer()
 
-    end_time = time.time() + 20 # the script will run for 20s
+    end_time = time.time() + 10 # the script will run for 20s
     while True:
         if time.time() > end_time:
             break
@@ -59,7 +59,7 @@ def start_streaming():
         results = create_response_dict()
         kafka_data = create_final_json(results)    
         producer.send("random_names", json.dumps(kafka_data).encode('utf-8'))
-        time.sleep(5)
+        time.sleep(1)
 
 if __name__ == "__main__":
     start_streaming()

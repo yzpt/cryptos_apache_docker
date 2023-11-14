@@ -3,9 +3,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType,StructField,FloatType,IntegerType,StringType
 from pyspark.sql.functions import from_json,col
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
-logger = logging.getLogger("spark_structured_streaming")
+# logging.basicConfig(level=logging.INFO,
+#                     format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
+# logger = logging.getLogger("spark_structured_streaming")
 
 
 def create_spark_session():
@@ -17,12 +17,14 @@ def create_spark_session():
         spark = SparkSession \
                 .builder \
                 .appName("SparkStructuredStreaming") \
-                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
+                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
                 .getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
-        logging.info('Spark session created successfully')
+        # logging.info('Spark session created successfully')
+        print('Spark session created successfully')
     except Exception:
-        logging.error("Couldn't create the spark session")
+        # logging.error("Couldn't create the spark session")
+        print("Couldn't create the spark session")
 
     return spark
 
@@ -41,9 +43,11 @@ def create_initial_dataframe(spark_session):
               .option("delimeter",",") \
               .option("startingOffsets", "earliest") \
               .load()
-        logging.info("Initial dataframe created successfully")
+        # logging.info("Initial dataframe created successfully")
+        print("Initial dataframe created successfully")
     except Exception as e:
-        logging.warning(f"Initial dataframe couldn't be created due to exception: {e}")
+        # logging.warning(f"Initial dataframe couldn't be created due to exception: {e}")
+        print(f"Initial dataframe couldn't be created due to exception: {e}")
 
     return df
 
@@ -73,7 +77,8 @@ def start_streaming(df):
     """
     Starts the streaming to table spark_streaming.random_names on console
     """
-    logging.info("Streaming is being started...")
+    # logging.info("Streaming is being started...")
+    print("Streaming is being started...")
     my_query = (df.writeStream
                   .format("console")
                   .outputMode("append")
@@ -86,6 +91,7 @@ def write_streaming_data():
     spark = create_spark_session()
     df = create_initial_dataframe(spark)
     df_final = create_final_dataframe(df, spark)
+    # df_final = df.selectExpr("CAST(value AS STRING)")
     start_streaming(df_final)
 
 
