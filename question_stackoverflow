@@ -1,0 +1,86 @@
+spark-shell --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.apache.kafka:kafka-clients:3.5.0
+
+:: loading settings :: url = jar:file:/opt/bitnami/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+Ivy Default Cache set to: /opt/bitnami/spark/.ivy2/cache
+The jars for the packages stored in: /opt/bitnami/spark/.ivy2/jars
+org.apache.spark#spark-sql-kafka-0-10_2.12 added as a dependency
+org.apache.kafka#kafka-clients added as a dependency
+:: resolving dependencies :: org.apache.spark#spark-submit-parent-4d76accc-f912-4f83-b577-41616818befe;1.0
+        confs: [default]
+        found org.apache.spark#spark-sql-kafka-0-10_2.12;3.5.0 in central
+        found org.apache.spark#spark-token-provider-kafka-0-10_2.12;3.5.0 in central
+        found org.apache.hadoop#hadoop-client-runtime;3.3.4 in central
+        found org.apache.hadoop#hadoop-client-api;3.3.4 in central
+        found org.xerial.snappy#snappy-java;1.1.10.3 in central
+        found org.slf4j#slf4j-api;2.0.7 in central
+        found commons-logging#commons-logging;1.1.3 in central
+        found com.google.code.findbugs#jsr305;3.0.0 in central
+        found org.apache.commons#commons-pool2;2.11.1 in central
+        found org.apache.kafka#kafka-clients;3.5.0 in central
+        found com.github.luben#zstd-jni;1.5.5-1 in central
+        found org.lz4#lz4-java;1.8.0 in central
+downloading https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/3.5.0/kafka-clients-3.5.0.jar ...
+        [SUCCESSFUL ] org.apache.kafka#kafka-clients;3.5.0!kafka-clients.jar (2371ms)
+:: resolution report :: resolve 1804ms :: artifacts dl 2464ms
+        :: modules in use:
+        com.github.luben#zstd-jni;1.5.5-1 from central in [default]
+        com.google.code.findbugs#jsr305;3.0.0 from central in [default]
+        commons-logging#commons-logging;1.1.3 from central in [default]
+        org.apache.commons#commons-pool2;2.11.1 from central in [default]
+        org.apache.hadoop#hadoop-client-api;3.3.4 from central in [default]
+        org.apache.hadoop#hadoop-client-runtime;3.3.4 from central in [default]
+        org.apache.kafka#kafka-clients;3.5.0 from central in [default]
+        org.apache.spark#spark-sql-kafka-0-10_2.12;3.5.0 from central in [default]
+        org.apache.spark#spark-token-provider-kafka-0-10_2.12;3.5.0 from central in [default]
+        org.lz4#lz4-java;1.8.0 from central in [default]
+        org.slf4j#slf4j-api;2.0.7 from central in [default]
+        org.xerial.snappy#snappy-java;1.1.10.3 from central in [default]
+        :: evicted modules:
+        org.apache.kafka#kafka-clients;3.4.1 by [org.apache.kafka#kafka-clients;3.5.0] in [default]
+        org.xerial.snappy#snappy-java;1.1.10.0 by [org.xerial.snappy#snappy-java;1.1.10.3] in [default]
+        org.slf4j#slf4j-api;1.7.36 by [org.slf4j#slf4j-api;2.0.7] in [default]
+        ---------------------------------------------------------------------
+        |                  |            modules            ||   artifacts   |
+        |       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+        ---------------------------------------------------------------------
+        |      default     |   15  |   1   |   1   |   3   ||   12  |   1   |
+        ---------------------------------------------------------------------
+:: retrieving :: org.apache.spark#spark-submit-parent-4d76accc-f912-4f83-b577-41616818befe
+        confs: [default]
+        1 artifacts copied, 11 already retrieved (5123kB/31ms)
+23/11/14 16:46:03 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+Spark context Web UI available at http://e25c67d519eb:4040
+Spark context available as 'sc' (master = local[*], app id = local-1699980376893).
+Spark session available as 'spark'.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.5.0
+      /_/
+         
+Using Scala version 2.12.18 (OpenJDK 64-Bit Server VM, Java 17.0.9)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> val df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("subscribe", "random_names").option("delimeter",",").option("startingOffsets", "earliest").load()
+
+java.lang.NoClassDefFoundError: org/apache/kafka/common/serialization/ByteArraySerializer
+  at org.apache.spark.sql.kafka010.KafkaSourceProvider$.<init>(KafkaSourceProvider.scala:601)
+  at org.apache.spark.sql.kafka010.KafkaSourceProvider$.<clinit>(KafkaSourceProvider.scala)
+  at org.apache.spark.sql.kafka010.KafkaSourceProvider.org$apache$spark$sql$kafka010$KafkaSourceProvider$$validateStreamOptions(KafkaSourceProvider.scala:338)
+  at org.apache.spark.sql.kafka010.KafkaSourceProvider.sourceSchema(KafkaSourceProvider.scala:71)
+  at org.apache.spark.sql.execution.datasources.DataSource.sourceSchema(DataSource.scala:233)
+  at org.apache.spark.sql.execution.datasources.DataSource.sourceInfo$lzycompute(DataSource.scala:118)
+  at org.apache.spark.sql.execution.datasources.DataSource.sourceInfo(DataSource.scala:118)
+  at org.apache.spark.sql.execution.streaming.StreamingRelation$.apply(StreamingRelation.scala:36)
+  at org.apache.spark.sql.streaming.DataStreamReader.loadInternal(DataStreamReader.scala:169)
+  at org.apache.spark.sql.streaming.DataStreamReader.load(DataStreamReader.scala:145)
+  ... 47 elided
+Caused by: java.lang.ClassNotFoundException: org.apache.kafka.common.serialization.ByteArraySerializer
+  at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
+  at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
+  at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525)
+  ... 57 more

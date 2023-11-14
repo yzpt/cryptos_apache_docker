@@ -17,7 +17,7 @@ def create_spark_session():
         spark = SparkSession \
                 .builder \
                 .appName("SparkStructuredStreaming") \
-                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
+                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
                 .getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         # logging.info('Spark session created successfully')
@@ -43,14 +43,13 @@ def create_initial_dataframe(spark_session):
               .option("delimeter",",") \
               .option("startingOffsets", "earliest") \
               .load()
-        # logging.info("Initial dataframe created successfully")
+            #   .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+
         print("Initial dataframe created successfully")
     except Exception as e:
-        # logging.warning(f"Initial dataframe couldn't be created due to exception: {e}")
         print(f"Initial dataframe couldn't be created due to exception: {e}")
 
     return df
-
 
 def create_final_dataframe(df, spark_session):
     """
@@ -82,6 +81,7 @@ def start_streaming(df):
     my_query = (df.writeStream
                   .format("console")
                   .outputMode("append")
+                  .option("checkpointLocation", "path/to/checkpoint/dir")
                   .start())
 
     return my_query.awaitTermination()
