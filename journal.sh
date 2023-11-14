@@ -122,3 +122,12 @@ spark-shell
 spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
 # ok !
 
+git push --set-upstream origin 341
+
+# merge
+git checkout main
+git merge 341
+
+# === insert to postgresql =====================================================================
+# > docker-compose.yml
+docker compose up -d spark-master spark-worker kafka postgres
