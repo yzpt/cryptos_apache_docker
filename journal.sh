@@ -94,3 +94,31 @@ pip install pyspark
 
 python3 spark_streaming.py
 
+
+
+# === try avec spark 3.4.1 =====================================================================
+# new branch 341
+git checkout -b 341
+
+# > docker-compose.yml
+# spark-master:
+#     image: bitnami/spark:3.4.1
+# spark-worker:
+#     image: bitnami/spark:3.4.1
+
+docker compose up spark-master spark-worker kafka -d
+
+# > spark_streaming.py
+#                 .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
+
+pip uninstall pyspark -y
+pip install pyspark==3.4.1
+
+docker cp ./spark_streaming.py kraft-spark-master-1:/opt/bitnami/pyspark_scripts/
+
+# === inside container
+docker exec -it kraft-spark-master-1 /bin/bash
+spark-shell
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+# ok !
+

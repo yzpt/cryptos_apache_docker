@@ -17,7 +17,7 @@ def create_spark_session():
         spark = SparkSession \
                 .builder \
                 .appName("SparkStructuredStreaming") \
-                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
+                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
                 .getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         # logging.info('Spark session created successfully')
