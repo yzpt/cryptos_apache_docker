@@ -64,7 +64,7 @@ docker cp ./spark-sql-kafka-0-10_2.12-3.5.0.jar kraft-spark-master-1:/opt/bitnam
 
 
 docker cp ./spark_streaming.py kraft-spark-master-1:/opt/bitnami/pyspark_scripts/
-docker cp ./kafka-clients-3.6.0.jar kraft-spark-master-1:/opt/bitnami/spark/jars/
+# docker cp ./kafka-clients-3.6.0.jar kraft-spark-master-1:/opt/bitnami/spark/jars/
 
 docker exec -it kraft-spark-master-1 /bin/bash
 # ===> inside container
@@ -76,12 +76,13 @@ spark-shell --jars opt/bitnami/spark/jars/
 val df = spark.readStream.format("kafka").option("kafka.bootstrap.servers", "kafka:9092").option("subscribe", "random_names").option("delimeter",",").option("startingOffsets", "earliest").load()
 
 
-spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 ../pyspark_scripts/spark_streaming.py
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0,org.apache.kafka:kafka-clients:3.6.0 /opt/bitnami/pyspark_scripts/spark_streaming.py
+spark-submit --master local[2] --jars /opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar,/opt/bitnami/spark/jars/kafka-clients-3.6.0.jar /opt/bitnami/pyspark_scripts/spark_streaming.py
+spark-submit --jars /jars/spark-sql-kafka-0-10_2.12-3.5.0,jar,/jars/kafka-clients-3.6.0.jar ../pyspark_scripts/spark_streaming.py
+
 spark-submit --master local[2] --jars /opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0.jar /opt/bitnami/pyspark_scripts/spark_streaming.py
-spark-submit --jars opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.0 ../pyspark_scripts/spark_streaming.py
 
-
-
+pwd
 
 # An error occurred while calling o34.load.
 # : java.lang.NoClassDefFoundError: org/apache/kafka/common/serialization/ByteArraySerializer
