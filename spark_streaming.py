@@ -17,7 +17,7 @@ def create_spark_session():
         spark = SparkSession \
                 .builder \
                 .appName("SparkStructuredStreaming") \
-                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
+                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,org.postgresql:postgresql:42.6.0") \
                 .getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         # logging.info('Spark session created successfully')
@@ -72,7 +72,7 @@ def create_final_dataframe(df, spark_session):
     return df
 
 
-def start_streaming(df):
+def start_console_streaming(df):
     """
     Starts the streaming to table spark_streaming.random_names on console
     """
@@ -86,13 +86,40 @@ def start_streaming(df):
 
     return my_query.awaitTermination()
 
+from pyspark.sql import DataFrame
+from pyspark.sql.streaming import DataStreamWriter
+
+# Create your postgresql configurations
+postgresql_sink_options = {
+    "dbtable": "spark_db.users",  # table
+    "user": "postgres",  # Database username
+    # "password": "",  # Password
+    "driver": "org.postgresql.Driver",
+    "url": "jdbc:postgresql://localhost:5432/"
+}
+
+# Method to write the dataset into postgresql
+def write_to_postgresql(dataset: DataFrame, mode: str = "append"):
+    def foreach_batch_function(df: DataFrame, epoch_id: int):
+        df.write \
+            .format("jdbc") \
+            .options(**postgresql_sink_options) \
+            .mode(mode) \
+            .save()
+
+    return dataset.writeStream \
+        .foreachBatch(foreach_batch_function) \
+        .start() \
+        .awaitTermination()
+
 
 def write_streaming_data():
     spark = create_spark_session()
     df = create_initial_dataframe(spark)
     df_final = create_final_dataframe(df, spark)
     # df_final = df.selectExpr("CAST(value AS STRING)")
-    start_streaming(df_final)
+    # start_console_streaming(df_final)
+    write_to_postgresql(df_final)
 
 
 if __name__ == '__main__':

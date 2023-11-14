@@ -129,5 +129,36 @@ git checkout main
 git merge 341
 
 # === insert to postgresql =====================================================================
+curl -sSL https://raw.githubusercontent.com/bitnami/containers/main/bitnami/postgresql/docker-compose.yml > docker-compose-postgresql.yml
+
 # > docker-compose.yml
-docker compose up -d spark-master spark-worker kafka postgres
+docker compose up -d spark-master spark-worker kafka postgresql
+
+docker exec -it kraft-postgresql-1 /bin/bash
+psql -U postgres
+
+# create spark_db database
+CREATE DATABASE spark_db;
+
+# connect to spark_db database
+\c spark_db
+
+# create users table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255) NOT NULL,
+    gender VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    postcode VARCHAR(255) NOT NULL,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    email VARCHAR(255) NOT NULL
+);
+
+# https://blog.knoldus.com/streaming-from-kafka-to-postgresql-through-spark-structured-streaming/
+
+
+python3 spark_streaming.py
+# org.postgresql.util.PSQLException: ERROR: schema "spark_db" does not exist
