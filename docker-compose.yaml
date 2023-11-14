@@ -83,6 +83,35 @@ services:
     networks:
       - cluster
 
+# === Spark =======
+  spark-master:
+    image: bitnami/spark:3.5.0
+    command: bin/spark-class org.apache.spark.deploy.master.Master
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    volumes:
+      - ./volume_spark_master_jars:/opt/bitnami/jars
+      - ./volume_spark_master_scripts:/opt/bitnami/pyspark_scripts
+    networks:
+      - cluster
+  
+  spark-worker:
+    image: bitnami/spark:3.5.0
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    volumes:
+      - ./volume_spark_worker_jars:/opt/bitnami/jars
+    networks:
+      - cluster
+
+
 networks:
   cluster:
     

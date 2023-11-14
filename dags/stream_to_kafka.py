@@ -41,8 +41,7 @@ def create_kafka_producer():
     """
     Creates the Kafka producer object
     """
-
-    # return KafkaProducer(bootstrap_servers=['localhost:9092'])
+    
     return KafkaProducer(bootstrap_servers=['kafka:9092'])
 
 
