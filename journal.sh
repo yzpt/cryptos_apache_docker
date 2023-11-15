@@ -5,9 +5,9 @@
 
 mkdir volume-kafka
 sudo chmod -R 777 ./volume-kafka
-docker compose up -d
+docker compose up kafka -d
 
-topic=random_names
+topic=crypto_trades
 server=localhost:9092
 
 # create topic
@@ -178,3 +178,10 @@ DESCRIBE spark_streaming.random_names;
 127.0.0.1 cassandra
 
 SELECT * FROM spark_streaming.random_names;
+
+
+
+
+# === websockets =====================================================================
+pip install websockets
+# > websocket_to_kafka.py

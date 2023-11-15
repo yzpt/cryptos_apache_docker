@@ -1,4 +1,4 @@
-## Deploying a Docker multi-container architecture (Airflow, Kafka, Spark, and Cassandra)
+# Deploying a Docker multi-container architecture (Airflow, Kafka, Spark, and Cassandra)
 
 ![project diagram](./img/diagram_cryptos_png.png)
 
@@ -23,13 +23,15 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 </table>
 </div>
 
-# 1. Kafka
+## 1. Source: real-time websocket
 
-# 2. Airflow
+## 2. Kafka
 
-# 3. Spark
+## 3. Airflow
 
-# 4. Cassandra
+## 4. Spark
 
-# 5. Looker
+## 5. Cassandra
+
+## 6. Looker
 
