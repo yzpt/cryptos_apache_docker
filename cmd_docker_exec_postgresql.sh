@@ -1,4 +1,4 @@
-docker compose exec postgresql psql -U root
+docker compose exec postgresql psql -U posgtgres
 
 
 

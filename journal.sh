@@ -162,3 +162,19 @@ CREATE TABLE users (
 
 python3 spark_streaming.py
 # org.postgresql.util.PSQLException: ERROR: schema "spark_db" does not exist
+
+
+
+# === Cassandra =====================================================================
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+CREATE KEYSPACE spark_streaming WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+CREATE TABLE spark_streaming.random_names(full_name text primary key, gender text, location text, city text, country text, postcode text, latitude float, longitude float, email text);
+DESCRIBE spark_streaming.random_names;
+
+# ERROR CassandraConnectorConf: Unknown host 'cassandra'
+# java.net.UnknownHostException: cassandra: Temporary failure in name resolution
+# ---> etc/hosts aad line :
+127.0.0.1 cassandra
+
+SELECT * FROM spark_streaming.random_names;

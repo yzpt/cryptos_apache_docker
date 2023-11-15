@@ -17,7 +17,11 @@ def create_spark_session():
         spark = SparkSession \
                 .builder \
                 .appName("SparkStructuredStreaming") \
-                .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,org.postgresql:postgresql:42.6.0") \
+                .config("spark.jars.packages", "com.datastax.spark:spark-cassandra-connector_2.12:3.4.1,org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1") \
+                .config("spark.cassandra.connection.host", "cassandra") \
+                .config("spark.cassandra.connection.port","9042")\
+                .config("spark.cassandra.auth.username", "cassandra") \
+                .config("spark.cassandra.auth.password", "cassandra") \
                 .getOrCreate()
         spark.sparkContext.setLogLevel("ERROR")
         # logging.info('Spark session created successfully')
@@ -43,7 +47,6 @@ def create_initial_dataframe(spark_session):
               .option("delimeter",",") \
               .option("startingOffsets", "earliest") \
               .load()
-            #   .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 
         print("Initial dataframe created successfully")
     except Exception as e:
@@ -81,49 +84,34 @@ def start_console_streaming(df):
     my_query = (df.writeStream
                   .format("console")
                   .outputMode("append")
-                  .option("checkpointLocation", "path/to/checkpoint/dir")
                   .start())
 
     return my_query.awaitTermination()
 
-from pyspark.sql import DataFrame
-from pyspark.sql.streaming import DataStreamWriter
+def start_cassandra_streaming(df):
+    """
+    Starts the streaming to table spark_streaming.random_names in cassandra
+    """
+    logging.info("Streaming is being started...")
+    my_query = (df.writeStream
+                  .format("org.apache.spark.sql.cassandra")
+                  .outputMode("append")
+                  .option("checkpointLocation", "checkpoint")
+                  .options(table="random_names", keyspace="spark_streaming")\
+                  .start())
 
-# Create your postgresql configurations
-postgresql_sink_options = {
-    "dbtable": "spark_db.users",  # table
-    "user": "postgres",  # Database username
-    # "password": "",  # Password
-    "driver": "org.postgresql.Driver",
-    "url": "jdbc:postgresql://localhost:5432/"
-}
+    return my_query.awaitTermination()
 
-# Method to write the dataset into postgresql
-def write_to_postgresql(dataset: DataFrame, mode: str = "append"):
-    def foreach_batch_function(df: DataFrame, epoch_id: int):
-        df.write \
-            .format("jdbc") \
-            .options(**postgresql_sink_options) \
-            .mode(mode) \
-            .save()
-
-    return dataset.writeStream \
-        .foreachBatch(foreach_batch_function) \
-        .start() \
-        .awaitTermination()
 
 
 def write_streaming_data():
     spark = create_spark_session()
     df = create_initial_dataframe(spark)
     df_final = create_final_dataframe(df, spark)
-    # df_final = df.selectExpr("CAST(value AS STRING)")
+    start_cassandra_streaming(df_final)
     # start_console_streaming(df_final)
-    write_to_postgresql(df_final)
-
 
 if __name__ == '__main__':
-
     try:
         write_streaming_data()
     except Exception as e:

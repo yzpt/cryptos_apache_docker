@@ -113,22 +113,40 @@ services:
 
 
 # === Postgres ====================================================================================================
-  postgresql:
-    image: bitnami/postgresql:16
+  # postgresql:
+    # image: bitnami/postgresql:16
+    # ports:
+    #   - '5432:5432'
+    # volumes:
+    #   - 'postgresql_data:/bitnami/postgresql'
+    # environment:
+    #   - 'ALLOW_EMPTY_PASSWORD=yes'
+    # networks:
+    #   - cluster
+
+
+# === cassandra ====================================================================================================
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    hostname: cassandra
     ports:
-      - '5432:5432'
-    volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - 9042:9042
     environment:
-      - 'ALLOW_EMPTY_PASSWORD=yes'
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
+    volumes:
+      # - ./:/home
+      - ./cassandra-data:/var/lib/cassandra
     networks:
       - cluster
 
 
-
 volumes:
-  postgresql_data:
-    driver: local
+  spark_data:
+  cassandra-data:
 
 networks:
   cluster:
