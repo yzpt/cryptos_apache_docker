@@ -23,3 +23,13 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 </table>
 </div>
 
+# 1. Kafka
+
+# 2. Airflow
+
+# 3. Spark
+
+# 4. Cassandra
+
+# 5. Looker
+
