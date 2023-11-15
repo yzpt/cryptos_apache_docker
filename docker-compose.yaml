@@ -127,7 +127,7 @@ services:
 
 # === cassandra ====================================================================================================
   cassandra:
-    image: cassandra:latest
+    image: cassandra:5.0
     container_name: cassandra
     hostname: cassandra
     ports:
