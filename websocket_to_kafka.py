@@ -20,7 +20,7 @@ def on_message(ws, message):
         kafka_data["symbol"] = trade['s']
         kafka_data["price"] = trade['p']
         kafka_data["volume"] = trade['v']
-        kafka_data["timestamp"] = trade['t']
+        kafka_data["timestamp_unix"] = trade['t']
         kafka_data["conditions"] = trade['c']
         
         producer.send('crypto_trades', json.dumps(kafka_data).encode('utf-8'))

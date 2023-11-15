@@ -1,7 +1,12 @@
 import logging
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType,StructField,FloatType,IntegerType,StringType
-from pyspark.sql.functions import from_json,col
+from pyspark.sql.functions import from_json,col,from_unixtime
+from pyspark.sql.functions import unix_timestamp
+from pyspark.sql.types import StructType,StructField,FloatType,IntegerType,StringType, LongType
+from pyspark.sql.functions import from_unixtime, col, substring
+import uuid
+from pyspark.sql.functions import monotonically_increasing_id
+from pyspark.sql.functions import udf
 
 # logging.basicConfig(level=logging.INFO,
 #                     format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
@@ -43,9 +48,10 @@ def create_initial_dataframe(spark_session):
               .readStream \
               .format("kafka") \
               .option("kafka.bootstrap.servers", "kafka:9092") \
-              .option("subscribe", "random_names") \
+              .option("subscribe", "crypto_trades") \
               .option("delimeter",",") \
               .option("startingOffsets", "earliest") \
+              .option("failOnDataLoss", "false") \
               .load()
 
         print("Initial dataframe created successfully")
@@ -54,25 +60,31 @@ def create_initial_dataframe(spark_session):
 
     return df
 
+
+
 def create_final_dataframe(df, spark_session):
     """
     Modifies the initial dataframe, and creates the final dataframe.
     """
     schema = StructType([
-                StructField("full_name",StringType(),False),
-                StructField("gender",StringType(),False),
-                StructField("location",StringType(),False),
-                StructField("city",StringType(),False),
-                StructField("country",StringType(),False),
-                StructField("postcode",StringType(),False),
-                StructField("latitude",FloatType(),False),
-                StructField("longitude",FloatType(),False),
-                StructField("email",StringType(),False)
+                StructField("symbol",StringType(),False),
+                StructField("price",FloatType(),False),
+                StructField("volume",FloatType(),False),
+                StructField("timestamp_unix",LongType(),False),
+                StructField("conditions",StringType(),False)        
             ])
 
     df = df.selectExpr("CAST(value AS STRING)").select(from_json(col("value"),schema).alias("data")).select("data.*")
+    # df = df.withColumn("datetime",from_unixtime(col("timestamp_unix")/1000))
+    # df = df.withColumn("datetime", from_unixtime(col("timestamp_unix")/1000, 'yyyy-MM-dd HH:mm:ss.SSS'))
+    # df drop column timestamp_unix:
+    # df = df.drop("timestamp_unix")
+    # df = df.withColumn("id", monotonically_increasing_id())
+    uuidUdf= udf(lambda : str(uuid.uuid4()),StringType())
+    df = df.withColumn("id", uuidUdf())    
     print(df)
     return df
+
 
 
 def start_console_streaming(df):
@@ -88,6 +100,9 @@ def start_console_streaming(df):
 
     return my_query.awaitTermination()
 
+def print_to_console(df, epoch_id):
+    df.show()
+
 def start_cassandra_streaming(df):
     """
     Starts the streaming to table spark_streaming.random_names in cassandra
@@ -97,11 +112,11 @@ def start_cassandra_streaming(df):
                   .format("org.apache.spark.sql.cassandra")
                   .outputMode("append")
                   .option("checkpointLocation", "checkpoint")
-                  .options(table="random_names", keyspace="spark_streaming")\
+                  .options(table="crypto_trades", keyspace="spark_streaming")
+                  .foreachBatch(print_to_console)
                   .start())
 
     return my_query.awaitTermination()
-
 
 
 def write_streaming_data():

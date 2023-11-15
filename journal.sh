@@ -19,7 +19,7 @@ docker exec kafka opt/bitnami/kafka/bin/kafka-topics.sh --describe --topic $topi
 # delete
 docker exec kafka opt/bitnami/kafka/bin/kafka-topics.sh --delete --topic $topic --bootstrap-server $server
 
-topic=test
+topic=crypto_trades
 server=localhost:9092
 # producer
 echo "bjr bjr" | docker exec -i kafka opt/bitnami/kafka/bin/kafka-console-producer.sh --topic $topic --bootstrap-server $server
@@ -181,7 +181,30 @@ SELECT * FROM spark_streaming.random_names;
 
 
 
-
+# =================== crypto branch ==================================================
 # === websockets =====================================================================
 pip install websockets
 # > websocket_to_kafka.py
+
+# > spark_streaming.py
+
+# cassandra :
+docker compose up -d kafka spark-master spark-worker cassandra
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+# create keyspace
+CREATE KEYSPACE spark_streaming WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+
+CREATE TABLE spark_streaming.crypto_trades(
+    id uuid primary key,
+    symbol text,
+    price float,
+    volume float,
+    timestamp_unix bigint,
+    conditions text
+);
+
+select * from spark_streaming.crypto_trades;
+
+# delete keyspace
+DROP KEYSPACE spark_streaming;
