@@ -27,11 +27,9 @@ I have chosen to use some anothers and latest images available on 2023-11-06 fro
 
 ## 2. Kafka
 
-## 3. Airflow
+## 3. Spark
 
-## 4. Spark
+## 4. Cassandra
 
-## 5. Cassandra
-
-## 6. Looker
+## 5. Looker
 
