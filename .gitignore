@@ -4,7 +4,7 @@ volume*
 dags*
 data/
 checkpoint/
-cassandra-data/
+cassandra-data/*
 key*
 path/
 script/
