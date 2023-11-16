@@ -10,7 +10,7 @@ with open('keys/finnhub_api_key.txt') as f:
  # Write trade data to file
 datetime_start = datetime.now()
 
-with open('trades' + str(datetime_start) + '.json', 'a') as f:
+with open('trades_' + str(datetime_start) + '.json', 'a') as f:
     f.write('[\n')
 
 def on_message(ws, message):
