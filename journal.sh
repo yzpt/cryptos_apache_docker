@@ -208,3 +208,19 @@ select * from spark_streaming.crypto_trades;
 
 # delete keyspace
 DROP KEYSPACE spark_streaming;
+
+
+
+# candlesticks charts
+# https://coderzcolumn.com/tutorials/data-science/candlestick-chart-in-python-mplfinance-plotly-bokeh
+
+
+
+# extract container
+mkdir extract
+# > main.py
+# > Dockerfile
+# > requirements_extract.txt
+
+docker build -t ws_extract_to_kafka .
+

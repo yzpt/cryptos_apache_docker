@@ -143,6 +143,19 @@ services:
     networks:
       - cluster
 
+# === extract script ==============================================
+  extract:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./extract:/app
+    # ports:
+    #   - "8080:8080"
+    command: python3 main.py
+    networks:
+      - cluster
+
 
 volumes:
   spark_data:
