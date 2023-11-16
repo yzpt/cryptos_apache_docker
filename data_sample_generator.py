@@ -1,14 +1,17 @@
 #https://pypi.org/project/websocket_client/
 import websocket
 import json
-from kafka import KafkaProducer
+from datetime import datetime
 
 with open('keys/finnhub_api_key.txt') as f:
     api_key = f.read()
-    f.close()
+    f.close()  
 
-producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
-  
+ # Write trade data to file
+datetime_start = datetime.now()
+
+with open('trades' + str(datetime_start) + '.json', 'a') as f:
+    f.write('[\n')
 
 def on_message(ws, message):
     json_message = json.loads(message)
@@ -21,7 +24,10 @@ def on_message(ws, message):
         kafka_data["volume"] = trade['v']
         kafka_data["timestamp_unix"] = trade['t']
         kafka_data["conditions"] = trade['c']
-        producer.send('crypto_trades', json.dumps(kafka_data).encode('utf-8'))
+        
+        with open('trades' + str(datetime_start) + '.json', 'a') as f:
+            f.write(json.dumps(kafka_data) + ',\n')
+        
 
 def on_error(ws, error):
     print(error)
@@ -40,3 +46,4 @@ if __name__ == "__main__":
                               on_close = on_close)
     ws.on_open = on_open
     ws.run_forever()
+    
