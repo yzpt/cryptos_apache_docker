@@ -138,7 +138,7 @@ docker compose up -d extract kafka
 Check that the data is being sent to Kafka:
 
 ```bash
-docker exec kafka kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crypto_trades --from-beginning
+docker exec kafka kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crypto_trades
 ```
 ![kafka consumer console output](./img/kafka_consumer.png)
 
@@ -193,7 +193,7 @@ docker exec -it crypto_streaming-spark-master-1 /bin/bash
 spark-submit --master local --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
 ```
 
-Check that the data is streamed by spark by displaying the trace on the console:
+Check that the data is streamed by spark by displaying batches on console:
 
 spark_streaming.py
 
@@ -223,6 +223,8 @@ def start_cassandra_streaming(df):
     [...]
 
 ```
+
+Restart the cluster to check:
 
 ![spark streaming console output](./img/spark_console_streaming.png)
 

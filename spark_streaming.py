@@ -96,7 +96,7 @@ def start_cassandra_streaming(df):
                   .outputMode("append")
                   .option("checkpointLocation", "checkpoint")
                   .options(table="crypto_trades", keyspace="spark_streaming")
-                  .foreachBatch(print_to_console)
+                #   .foreachBatch(print_to_console)
                   .start())
 
     return my_query.awaitTermination()
