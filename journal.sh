@@ -291,3 +291,13 @@ git checkout github
 # cleaning for portfolio
 git add . && git commit -m "docker pipeline ok - cleaning for portfolio"
 git push
+
+git init
+git add . && git commit -m "-"
+
+# rename branch
+git branch -m github github_clean
+
+git remote add origin https://github.com/yzpt/docker_cluster_streaming.git
+git push -u origin github_clean
+
