@@ -352,7 +352,10 @@ docker exec -it cassandra /bin/bash
 cqlsh -u cassandra -p cassandra
 select * from spark_streaming.crypto_trades;
 
+TRUNCATE spark_streaming.crypto_trades;
+
 docker compose down --remove-orphans
+docker compose up -d
 
 # push to github
 git add .
