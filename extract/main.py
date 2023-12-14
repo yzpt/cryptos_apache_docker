@@ -44,8 +44,8 @@ if __name__ == "__main__":
             api_key = f.read()
             f.close()
 
-        websocket.enableTrace(True)
-        # websocket.enableTrace(False)
+        # displaying messages on console: True/False
+        websocket.enableTrace(False)
 
         wait_for_kafka()
 

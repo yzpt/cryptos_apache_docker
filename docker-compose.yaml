@@ -1,5 +1,16 @@
 version: "3.8"
 services:
+# === extract container ==============================================
+  extract:
+    build: 
+      context: ./
+      dockerfile: ./extract/Dockerfile
+    volumes:
+      - ./extract:/app
+    networks:
+      - cluster
+
+# === kafka ===========================================================
   kafka:
     image: bitnami/kafka
     container_name: kafka
@@ -65,21 +76,6 @@ services:
       - CASSANDRA_PASSWORD=cassandra
     networks:
       - cluster
-
-# === extract container ==============================================
-  extract:
-    build: 
-      context: ./
-      dockerfile: ./extract/Dockerfile
-    volumes:
-      - ./extract:/app
-    networks:
-      - cluster
-
-
-volumes:
-  spark_data:
-  cassandra-data:
 
 networks:
   cluster:

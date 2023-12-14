@@ -1,6 +1,6 @@
 # Deploying a Docker multi-container streaming architecture (Kafka, Spark, and Cassandra)
 
-![project diagram](./img/diagram_cryptos_png.png)
+![project diagram](./img/clean_pipeline_diagram.png)
 
 <hr>
 
@@ -20,19 +20,36 @@ I have chosen these images from [Docker Hub](https://hub.docker.com/) for the fo
 
 ## 1. Real-time websocket extraction container
 
-[https://pypi.org/project/websocket_client/](https://pypi.org/project/websocket_client/)
+Docker container using [websocket-client](https://pypi.org/project/websocket_client/) and [kafka-python](https://pypi.org/project/kafka-python/) to extract real-time data from [Finnhub](https://finnhub.io/).
+
+```bash
+extract/
+├── keys/
+│   └── finnhub_api_key.txt 
+├── Dockerfile
+├── requirements_extract.txt
+└── main.py
+```
+
+<details>
+<summary>extract/main.py</summary>
 
 ```python
 import websocket
 import json
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaConsumer
+import time
 
-# read api key from file
-with open('keys/finnhub_api_key.txt') as f:
-    api_key = f.read()
-    f.close()
 
-producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+def wait_for_kafka():
+    while True:
+        try:
+            consumer = KafkaConsumer(bootstrap_servers='kafka:9092')
+            # If the above line doesn't throw an exception, Kafka is ready
+            break
+        except Exception:
+            print("Waiting for Kafka to start...")
+            time.sleep(1)
   
 
 def on_message(ws, message):
@@ -58,21 +75,240 @@ def on_open(ws):
     ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
 
 if __name__ == "__main__":
-    websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("wss://ws.finnhub.io?token=" + api_key ,
-                              on_message = on_message,
-                              on_error = on_error,
-                              on_close = on_close)
-    ws.on_open = on_open
-    ws.run_forever()
-```
+    try:
+        with open('keys/finnhub_api_key.txt') as f:
+            api_key = f.read()
+            f.close()
 
+        # displaying messages on console
+        websocket.enableTrace(True)
+
+        wait_for_kafka()
+
+        producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+
+        ws = websocket.WebSocketApp("wss://ws.finnhub.io?token=" + api_key ,
+                                on_message = on_message,
+                                on_error = on_error,
+                                on_close = on_close)
+        ws.on_open = on_open
+        ws.run_forever()
+    
+    except Exception as e:
+        print(e)
+```
+</details>
 
 ## 2. Kafka
 
+Configuring Kraft mode via `docker-compose.yaml`:
+
+```yaml
+version: "3.8"
+services:
+
+    ...
+
+# === kafka ===========================================================
+  kafka:
+    image: bitnami/kafka
+    container_name: kafka
+    ports:
+      - 9092:9092
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:2181
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@127.0.0.1:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=MkU3OEVBNTcwNTJENDM2Qk
+    networks:
+      - cluster
+```
+Start extracting data from Finnhub and sending it to Kafka:
+
+```bash
+docker compose up -d extract kafka
+```
+Check that the data is being sent to Kafka:
+
+```bash
+docker exec kafka kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic crypto_trades --from-beginning
+```
+![kafka consumer console output](./img/kafka_consumer.png)
+
 ## 3. Spark
+
+```docker-compose.yaml
+version: "3.8"
+services:
+    
+      ...
+
+# === Spark =======
+  spark-master:
+    image: bitnami/spark:3.4.1
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    volumes:
+      - ./spark_entrypoint.sh:/entrypoint.sh
+      - ./spark_streaming.py:/opt/bitnami/pyspark_scripts/spark_streaming.py
+      - ./vol_spark_checkpoint:/opt/bitnami/pyspark_scripts/checkpoint
+    command: ["/bin/bash", "/entrypoint.sh"]
+    networks:
+      - cluster
+  
+  spark-worker:
+    image: bitnami/spark:3.4.1
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    depends_on:
+      - spark-master
+    environment:
+      SPARK_MODE: worker
+      SPARK_WORKER_CORES: 2
+      SPARK_WORKER_MEMORY: 1g
+      SPARK_MASTER_URL: spark://spark-master:7077
+    networks:
+      - cluster
+
+```
+
+Start Spark containers and start streaming:
+
+```bash
+# start spark containers
+docker compose up -d extract kafka spark-master spark-worker
+docker compose down
+
+# connect to spark-master container
+docker exec -it crypto_streaming-spark-master-1 /bin/bash
+
+# start streaming
+spark-submit --master local --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+```
+
+Check that the data is streamed by spark by displaying the trace on the console:
+
+spark_streaming.py
+
+```python
+
+    [...]
+
+def print_to_console(df, epoch_id):
+    df.show()
+
+def start_cassandra_streaming(df):
+    """
+    Starts the streaming to table spark_streaming.random_names in cassandra
+    """
+    logging.info("Streaming is being started...")
+    my_query = (df.writeStream
+                  .format("org.apache.spark.sql.cassandra")
+                  .outputMode("append")
+                  .option("checkpointLocation", "checkpoint")
+                  .options(table="crypto_trades", keyspace="spark_streaming")
+                  #.foreachBatch(print_to_console) # <-- uncomment this line to print to container's console
+                  # /!\ if uncommented, cassandra is not feeded /!\
+                  .start())
+
+    return my_query.awaitTermination()
+
+    [...]
+
+```
+
+![spark streaming console output](./img/spark_console_streaming.png)
 
 ## 4. Cassandra
 
-## 5. Looker
+```docker-compose.yaml
+version: "3.8"
+services:
+    
+        [...]
+
+# === Cassandra ====================================================================================================
+  cassandra:
+    image: cassandra:5.0
+    container_name: cassandra
+    hostname: cassandra
+    volumes:
+      - ./vol_cassandra_data:/var/lib/cassandra
+    ports:
+      - 9042:9042
+    environment:
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+      - CASSANDRA_USERNAME=cassandra
+      - CASSANDRA_PASSWORD=cassandra
+    networks:
+      - cluster
+
+    [...]
+
+```
+
+Start Cassandra container 
+
+```bash
+docker compose up -d extract kafka spark-master spark-worker cassandra
+```
+
+Creating the keyspace and table in Cassandra:
+
+```bash
+# connect to cassandra container
+docker exec -it cassandra /bin/bash
+
+# connect to cassandra
+cqlsh -u cassandra -p cassandra
+
+# create keyspace
+CREATE KEYSPACE spark_streaming WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+
+# create table
+CREATE TABLE spark_streaming.crypto_trades(
+    id uuid primary key,
+    symbol text,
+    price float,
+    volume float,
+    timestamp_unix bigint,
+    conditions text
+);
+```
+## 5. Running pipeline
+
+Start streaming:
+
+```bash
+docker compose down --remove-orphans
+docker compose up -d
+
+# connect to spark-master container
+docker exec -it crypto_streaming-spark-master-1 /bin/bash
+
+# start streaming
+spark-submit --master local --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+```
+
+Check that the data is being inserted in Cassandra:
+
+```bash
+# connect to cassandra container
+docker exec -it cassandra /bin/bash
+
+# connect to cassandra
+cqlsh -u cassandra -p cassandra
+
+# check that data is being inserted in cassandra
+select * from spark_streaming.crypto_trades;
+```
+![cassandra console output](./img/cassandra_select.png)
 
