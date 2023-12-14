@@ -1,4 +1,4 @@
-# Deploying a Docker multi-container streaming architecture (Airflow, Kafka, Spark, and Cassandra)
+# Deploying a Docker multi-container streaming architecture (Kafka, Spark, and Cassandra)
 
 ![project diagram](./img/diagram_cryptos_png.png)
 

@@ -352,3 +352,9 @@ docker exec -it cassandra /bin/bash
 cqlsh -u cassandra -p cassandra
 select * from spark_streaming.crypto_trades;
 
+
+# push to github
+git add .
+git commit -m "clean pipeline"
+git branch -m github_clean
+git push --set-upstream origin github_clean
