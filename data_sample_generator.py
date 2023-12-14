@@ -1,4 +1,3 @@
-#https://pypi.org/project/websocket_client/
 import websocket
 import json
 from datetime import datetime

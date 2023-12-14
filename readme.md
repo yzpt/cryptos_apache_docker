@@ -4,13 +4,13 @@
 
 <hr>
 
-I am replicating and customizing the great project from [Dogukan Ulu](https://dogukanulu.dev/) :
+Project inspired from [Dogukan Ulu](https://dogukanulu.dev/) :
 
 * [Data Engineering End-to-End Project — Spark, Kafka, Airflow, Docker, Cassandra, Python](https://medium.com/@dogukannulu/data-engineering-end-to-end-project-1-7a7be2a3671)
 
 * Github repo : [https://github.com/dogukannulu/kafka_spark_structured_streaming](https://github.com/dogukannulu/kafka_spark_structured_streaming)
 
-I have chosen to use some anothers and latest images available on 2023-11-06 from [Docker Hub](https://hub.docker.com/) for the following services:
+I have chosen these images from [Docker Hub](https://hub.docker.com/) for the following services:
 
 <div style="display:flex; justify-content:center; width:100%">
 <table>

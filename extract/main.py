@@ -1,13 +1,19 @@
 #https://pypi.org/project/websocket_client/
 import websocket
 import json
-from kafka import KafkaProducer
+from kafka import KafkaProducer, KafkaConsumer
+import time
 
-with open('keys/finnhub_api_key.txt') as f:
-    api_key = f.read()
-    f.close()
 
-producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+def wait_for_kafka():
+    while True:
+        try:
+            consumer = KafkaConsumer(bootstrap_servers='kafka:9092')
+            # If the above line doesn't throw an exception, Kafka is ready
+            break
+        except Exception:
+            print("Waiting for Kafka to start...")
+            time.sleep(1)
   
 
 def on_message(ws, message):
@@ -33,7 +39,17 @@ def on_open(ws):
     ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
 
 if __name__ == "__main__":
+    with open('keys/finnhub_api_key.txt') as f:
+        api_key = f.read()
+        f.close()
+
     websocket.enableTrace(True)
+    # websocket.enableTrace(False)
+
+    wait_for_kafka()
+
+    producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+
     ws = websocket.WebSocketApp("wss://ws.finnhub.io?token=" + api_key ,
                               on_message = on_message,
                               on_error = on_error,

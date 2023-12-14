@@ -119,7 +119,7 @@ docker cp ./spark_streaming.py kraft-spark-master-1:/opt/bitnami/pyspark_scripts
 # === inside container
 docker exec -it kraft-spark-master-1 /bin/bash
 spark-shell
-spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
 # ok !
 
 git push --set-upstream origin 341
@@ -204,6 +204,8 @@ CREATE TABLE spark_streaming.crypto_trades(
     conditions text
 );
 
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
 select * from spark_streaming.crypto_trades;
 
 # delete keyspace
@@ -224,3 +226,54 @@ mkdir extract
 
 docker build -t ws_extract_to_kafka .
 
+
+
+
+# === reprise mardi 12/12/23
+
+cp -r keys extract/
+
+docker compose down --remove-orphans
+docker compose up -d extract kafka
+docker compose up -d extract kafka spark-master spark-worker cassandra
+
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+select * from spark_streaming.crypto_trades;
+
+# cassandra delete all lines of a table
+TRUNCATE spark_streaming.crypto_trades;
+
+# exec spark-master container
+docker exec -it kraft-spark-master-1 /bin/bash
+cd ..
+cd pyspark_scripts/
+cat spark_streaming.py
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+# --> console streaming ok
+
+
+# errors with cassandra streaming :
+# error
+# An error occurred while calling o86.start.
+# : java.io.IOException: mkdir of file:/opt/bitnami/pyspark_scripts/checkpoint failed
+
+# compose spark-master volume add line:
+- ./checkpoint:/opt/bitnami/pyspark_scripts/checkpoint
+
+mkdir checkpoint
+
+docker compose down --remove-orphans
+docker compose up -d extract kafka spark-master spark-worker cassandra
+# ->  spark-submit
+docker exec -it kraft-spark-master-1 /bin/bash && cd .. && cd pyspark_scripts/ && spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+#  ERROR MicroBatchExecution: Query [id = 18f12a31-3f8f-4420-a84b-8ea41628d0d5, runId = 394a1a20-7a37-4914-8b23-c8a58f00fa76] terminated with error
+# java.io.FileNotFoundException: /opt/bitnami/pyspark_scripts/checkpoint/commits/.200.30bd3235-b4c0-44f8-8f22-0079cbc19b16.tmp (Permission denied)
+chmod -R 777 checkpoint/
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+select * from spark_streaming.crypto_trades;
+
+# ok !!!

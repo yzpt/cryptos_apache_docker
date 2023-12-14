@@ -1,12 +1,10 @@
-import logging
+
+from pyspark import SparkConf
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json,col,from_unixtime
-from pyspark.sql.functions import unix_timestamp
-from pyspark.sql.types import StructType,StructField,FloatType,IntegerType,StringType, LongType
-from pyspark.sql.functions import from_unixtime, col, substring
+from pyspark.sql.functions import from_json, col, udf
+from pyspark.sql.types import StructType,StructField,FloatType,StringType, LongType
+import logging
 import uuid
-from pyspark.sql.functions import monotonically_increasing_id
-from pyspark.sql.functions import udf
 
 # logging.basicConfig(level=logging.INFO,
 #                     format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
@@ -28,6 +26,11 @@ def create_spark_session():
                 .config("spark.cassandra.auth.username", "cassandra") \
                 .config("spark.cassandra.auth.password", "cassandra") \
                 .getOrCreate()
+        # Get the SparkConf from the Spark session
+        conf = spark._jsc.getConf()
+        # Set the value for spark.maxRemoteBlockSizeFetchToMem
+        conf.set("spark.maxRemoteBlockSizeFetchToMem", "1g")  # to avoid the 'too large frame' error when blocksize >= 2g
+
         spark.sparkContext.setLogLevel("ERROR")
         # logging.info('Spark session created successfully')
         print('Spark session created successfully')
@@ -75,11 +78,6 @@ def create_final_dataframe(df, spark_session):
             ])
 
     df = df.selectExpr("CAST(value AS STRING)").select(from_json(col("value"),schema).alias("data")).select("data.*")
-    # df = df.withColumn("datetime",from_unixtime(col("timestamp_unix")/1000))
-    # df = df.withColumn("datetime", from_unixtime(col("timestamp_unix")/1000, 'yyyy-MM-dd HH:mm:ss.SSS'))
-    # df drop column timestamp_unix:
-    # df = df.drop("timestamp_unix")
-    # df = df.withColumn("id", monotonically_increasing_id())
     uuidUdf= udf(lambda : str(uuid.uuid4()),StringType())
     df = df.withColumn("id", uuidUdf())    
     print(df)
@@ -113,7 +111,7 @@ def start_cassandra_streaming(df):
                   .outputMode("append")
                   .option("checkpointLocation", "checkpoint")
                   .options(table="crypto_trades", keyspace="spark_streaming")
-                  .foreachBatch(print_to_console)
+                #   .foreachBatch(print_to_console)
                   .start())
 
     return my_query.awaitTermination()
