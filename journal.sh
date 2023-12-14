@@ -358,3 +358,5 @@ git add .
 git commit -m "clean pipeline"
 git branch -m github_clean
 git push --set-upstream origin github_clean
+
+git add . && git commit -m "clean pipeline" && git push
