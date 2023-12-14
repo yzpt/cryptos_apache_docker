@@ -301,3 +301,54 @@ git branch -m github github_clean
 git remote add origin https://github.com/yzpt/docker_cluster_streaming.git
 git push -u origin github_clean
 
+git add . && git commit -m "-" && git push
+
+# === clean rebuild =====================================================================
+
+# 1. websocket extraction
+# --> ./extract
+
+# 2. kafka
+docker compose up -d extract kafka
+
+# check with kafka consumer console:
+docker exec kafka opt/bitnami/kafka/bin/kafka-console-consumer.sh --topic crypto_trades --bootstrap-server localhost:9092
+# img kafka_consumer.png
+
+# 3. spark
+#  -> spark_entrypoint.sh
+docker compose down --remove-orphans
+docker compose up -d extract kafka spark-master spark-worker
+
+docker exec -it crypto_streaming-spark-master-1 /bin/bash
+spark-submit --master local[2] --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1,com.datastax.spark:spark-cassandra-connector_2.12:3.4.1 /opt/bitnami/pyspark_scripts/spark_streaming.py
+
+# -> spark console streaming
+
+# 4. cassandra
+docker compose down --remove-orphans
+
+docker compose up -d extract kafka spark-master spark-worker cassandra
+
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+
+# create keyspace
+CREATE KEYSPACE spark_streaming WITH replication = {'class':'SimpleStrategy','replication_factor':1};
+
+CREATE TABLE spark_streaming.crypto_trades(
+    id uuid primary key,
+    symbol text,
+    price float,
+    volume float,
+    timestamp_unix bigint,
+    conditions text
+);
+
+# cassandra list tables
+DESCRIBE spark_streaming;
+
+docker exec -it cassandra /bin/bash
+cqlsh -u cassandra -p cassandra
+select * from spark_streaming.crypto_trades;
+

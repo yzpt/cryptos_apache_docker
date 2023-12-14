@@ -39,20 +39,24 @@ def on_open(ws):
     ws.send('{"type":"subscribe","symbol":"BINANCE:BTCUSDT"}')
 
 if __name__ == "__main__":
-    with open('keys/finnhub_api_key.txt') as f:
-        api_key = f.read()
-        f.close()
+    try:
+        with open('keys/finnhub_api_key.txt') as f:
+            api_key = f.read()
+            f.close()
 
-    websocket.enableTrace(True)
-    # websocket.enableTrace(False)
+        websocket.enableTrace(True)
+        # websocket.enableTrace(False)
 
-    wait_for_kafka()
+        wait_for_kafka()
 
-    producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
+        producer = KafkaProducer(bootstrap_servers=['kafka:9092'])
 
-    ws = websocket.WebSocketApp("wss://ws.finnhub.io?token=" + api_key ,
-                              on_message = on_message,
-                              on_error = on_error,
-                              on_close = on_close)
-    ws.on_open = on_open
-    ws.run_forever()
+        ws = websocket.WebSocketApp("wss://ws.finnhub.io?token=" + api_key ,
+                                on_message = on_message,
+                                on_error = on_error,
+                                on_close = on_close)
+        ws.on_open = on_open
+        ws.run_forever()
+    
+    except Exception as e:
+        print(e)

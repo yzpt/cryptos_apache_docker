@@ -1,1 +1,8 @@
 keys/
+volume-kafka/
+checkpoint/
+journal_old.sh
+
+
+venv*
+vol_*
