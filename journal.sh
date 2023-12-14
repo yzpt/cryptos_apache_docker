@@ -277,3 +277,16 @@ cqlsh -u cassandra -p cassandra
 select * from spark_streaming.crypto_trades;
 
 # ok !!!
+
+git add .
+git commit -m "docker pipeline ok"
+git push --set-upstream origin github
+
+# backup branch
+git checkout -b docker_pipeline_ok
+git add . && git commit -m "docker pipeline ok - backup"
+git push --set-upstream origin docker_pipeline_ok
+
+git checkout github
+# cleaning for portfolio
+
